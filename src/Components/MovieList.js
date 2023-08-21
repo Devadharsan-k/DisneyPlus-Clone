@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import GlobalApi from '../Services/GlobalApi'
 import MovieCard from './MovieCard';
 
+
 const MovieList = ({genereId}) => { 
 
     const[movieList, setMovieList] = useState([]);
@@ -10,13 +11,13 @@ const MovieList = ({genereId}) => {
     useEffect(() => {
       const timeout = setTimeout(() => {
         getMovieByGenereId();
-      }, 3500)
+      }, 2500)
     },[])
 
     const getMovieByGenereId =() => {
         GlobalApi.getMovieByGenreId(genereId).then(resp => {
           setMovieList(resp.data.results);
-          console.log(resp.data);
+          console.log(resp.data.results);
         })
     }
   return (

@@ -1,15 +1,47 @@
-import React from 'react';
-import { styled } from 'styled-components';
-const IMAGE_BASE_URL="https://image.tmdb.org/t/p/original";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import TrailerModal from './TrailerModel';
 
-const MovieCard = ({movie}) => {
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
+
+const MovieCard = ({ movie }) => {
+  const [videoKeys, setVideoKeys] = useState(null);
+  const [trailerModalOpen, setTrailerModalOpen] = useState(false);
+
+  const handleKey = () => {
+    fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=dece40c663415ca34f36519d0e338168`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.results && data.results.length > 0) {
+          const key = data.results[0].key;
+          setVideoKeys(key);
+          setTrailerModalOpen(true);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching video data:", error);
+      });
+  };
+
+  const closeTrailerModal = () => {
+    setTrailerModalOpen(false);
+  };
+
   return (
-            <Wrap>
-                <img src={IMAGE_BASE_URL+movie.poster_path} alt={movie.title} />
-            </Wrap>
+    <>
+      <Wrap onClick={handleKey}>
+        <img src={IMAGE_BASE_URL + movie.poster_path} alt={movie.title} />
+      </Wrap>
+      {trailerModalOpen && (
+        <TrailerModal
+          ytTrailer={`https://www.youtube.com/embed/${videoKeys}`}
+          onClose={closeTrailerModal}
+        />
+      )}
+    </>
+  );
+};
 
-  )
-}
 
 
 const Wrap = styled.div`

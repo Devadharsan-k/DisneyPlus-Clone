@@ -19,6 +19,7 @@ const Header = () => {
         setUser(user)
         navigate("/home");
       }
+      else navigate("/")
     });
   }, [userName]);
 
